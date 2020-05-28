@@ -94,20 +94,22 @@ def change_password(conf, *args):
         else:
             change_password_ldap(conf, *args)
 
-    except (LDAPBindError, LDAPInvalidCredentialsResult, LDAPUserNameIsMandatoryError):
+    except (LDAPBindError, LDAPInvalidCredentialsResult, LDAPUserNameIsMandatoryError) as e:
+        LOG.warning('Invalid authentication credentials for change_password', exc_info=e)
         raise Error('Username or password is incorrect!')
 
     except LDAPConstraintViolationResult as e:
+        LOG.warning('Invalid password for change_password', exc_info=e)
         # Extract useful part of the error message (for Samba 4 / AD).
         msg = e.message.split('check_password_restrictions: ')[-1].capitalize()
         raise Error(msg)
 
     except LDAPSocketOpenError as e:
-        LOG.error('{}: {!s}'.format(e.__class__.__name__, e))
+        LOG.error('LDAP connection error for change_password', exc_info=e)
         raise Error('Unable to connect to the remote server.')
 
     except LDAPExceptionError as e:
-        LOG.error('{}: {!s}'.format(e.__class__.__name__, e))
+        LOG.error('Unkonwn LDAP error for change_password', exc_info=e)
         raise Error('Encountered an unexpected error while communicating with the remote server.')
 
 
