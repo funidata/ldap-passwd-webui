@@ -122,7 +122,10 @@ def change_password_ldap(conf, username, old_pass, new_pass):
 
 
 def change_password_ad(conf, username, old_pass, new_pass):
-    user = username + '@' + conf['ad_domain']
+    if conf.get('ad_domain'):
+        user = username + '@' + conf['ad_domain']
+    else:
+        user = username
 
     with connect_ldap(conf, authentication=SIMPLE, user=user, password=old_pass) as c:
         c.bind()
