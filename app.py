@@ -161,8 +161,6 @@ LOG.info("Starting ldap-passwd-webui %s" % VERSION)
 
 CONF = read_config()
 
-bottle.TEMPLATE_PATH = [BASE_DIR]
-
 # Set default attributes to pass into templates.
 SimpleTemplate.defaults = dict(CONF['html'])
 SimpleTemplate.defaults['url'] = bottle.url
