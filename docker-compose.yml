@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  ldap-passwd-webui:
+    build: .
+    image: "${DOCKER_IMAGE_NAMESPACE:-funidata}/ldap-passwd-webui:2.1.0-${DOCKER_IMAGE_TAG:-dev}"
+    volumes:
+      - ./config:/opt/ldap-passwd-webui/config
+    environment:
+      CONF_FILE: /opt/ldap-passwd-webui/config/settings.ini
+      DEBUG: "true"
